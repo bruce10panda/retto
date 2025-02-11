@@ -1,9 +1,9 @@
 body {
-    --palette-primary: #ff0000;
-    --palette-secondary: #ffe100;
-    --palette-tertiary: #0000ff;
+    --palette-primary: #ac7979;
+    --palette-secondary: #ecdede;
+    --palette-tertiary: #dabcbc;
     --palette-white: #fff;
-    --palette-black: #000;
+    --palette-black: #000000;
 }
 
 #primary {
@@ -43,4 +43,13 @@ body {
 
 .color p {
     margin: 0px;
+    color: var(--palette-white);
+}
+
+.color span {
+    color: var(--palette-white);
+}
+
+.light {
+    color: var(--palette-black) !important;
 }
