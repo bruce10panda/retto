@@ -98,3 +98,7 @@ h6 {
     transform: scale(1.03);
     cursor: pointer;
 }
+
+.uiicon {
+    color: var(--white-color);
+}
