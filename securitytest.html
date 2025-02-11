@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Firestore Data Display</title>
+</head>
+<body>
+
+  <h1>Firestore Data</h1>
+
+  <div id="data-container">
+    Loading data...
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+    apiKey: "AIzaSyCO82uG0A2ndt8J-9Enrj4lUxHlvkmiX64",
+    authDomain: "retto-bcb89.firebaseapp.com",
+    projectId: "retto-bcb89",
+    storageBucket: "retto-bcb89.firebasestorage.app",
+    messagingSenderId: "1059937497199",
+    appId: "1:1059937497199:web:e84ac704bb181f98f85d9a",
+    measurementId: "G-BW9PHLZBFG"
+};
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(app);
+
+    const dataContainer = document.getElementById('data-container');
+
+    // Function to fetch and display data
+    async function fetchData(collectionName) {
+      try {
+        const querySnapshot = await db.collection(collectionName).get();
+        let dataHTML = "";
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          dataHTML += "<p><strong>Document ID:</strong> " + doc.id + "</p>";
+          dataHTML += "<pre>"; // Use <pre> for formatted JSON
+          dataHTML += JSON.stringify(data, null, 2); // Pretty print JSON
+          dataHTML += "</pre>";
+          dataHTML += "<hr>";
+
+        });
+
+        if (dataHTML === "") {
+            dataHTML = "<p>No data found in this collection.</p>";
+        }
+
+        dataContainer.innerHTML = dataHTML;
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        dataContainer.innerHTML = "<p>Error fetching data. Check the console for details.</p>";
+      }
+    }
+
+
+    // Example: Fetch data from a collection named "users"
+    const collectionToFetch = prompt("Enter the name of the Firestore collection to fetch:", "users"); // Prompt for collection name
+
+    if (collectionToFetch) {
+        fetchData(collectionToFetch);
+    } else {
+        dataContainer.innerHTML = "<p>No collection name provided.</p>";
+    }
+
+
+
+  </script>
+
+</body>
+</html>
