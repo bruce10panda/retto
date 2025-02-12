@@ -10,7 +10,7 @@ const auth = getAuth();
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
       console.log("No user is logged in. Redirecting...");
-      window.location.href = "../login"; // Redirect if not logged in
+      window.location.href = "../../../login"; // Redirect if not logged in
   } else {
       console.log("User logged in:", user.email);
   }

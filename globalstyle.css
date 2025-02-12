@@ -100,5 +100,9 @@ h6 {
 }
 
 .uiicon {
-    color: var(--white-color);
+    color: var(--white-color) !important;
+}
+
+.smooth {
+    transition: all .2s ease-in-out;
 }

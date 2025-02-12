@@ -1,6 +1,6 @@
 // Import Firebase modules
 import { db } from "../../../firebaseconfig.js";
-import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { doc, setDoc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // Initialize Firebase Auth
@@ -10,7 +10,7 @@ const auth = getAuth();
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     console.log("No user is logged in. Redirecting...");
-    window.location.href = "../login"; // Redirect if not logged in
+    window.location.href = "../../../../login"; // Redirect if not logged in
   } else {
     console.log("User logged in:", user.email);
   }
@@ -103,12 +103,24 @@ function generateColors() {
   const white = lockedColors.white ? getComputedStyle(document.documentElement).getPropertyValue('--palette-white') : hslToRgb(baseHue, 0.05, 0.95);
   const black = lockedColors.black ? getComputedStyle(document.documentElement).getPropertyValue('--palette-black') : hslToRgb(baseHue, 0.1, 0.1);
 
-  // Apply colors to CSS variables
-  document.documentElement.style.setProperty('--palette-primary', primary);
-  document.documentElement.style.setProperty('--palette-secondary', secondary);
-  document.documentElement.style.setProperty('--palette-tertiary', tertiary);
-  document.documentElement.style.setProperty('--palette-white', white);
-  document.documentElement.style.setProperty('--palette-black', black);
+// Apply colors to elements with the class `.palettecolorp`
+document.querySelectorAll('.palettecolorp').forEach(element => {
+  element.style.color = primary;
+});
+
+document.querySelectorAll('.palettecolorpb').forEach(element => {
+  element.style.setProperty("background-color", primary, "important");
+});
+
+document.documentElement.style.backgroundColor = black;
+document.body.style.backgroundColor = black;
+
+    // Apply colors to CSS variables
+    document.documentElement.style.setProperty('--palette-primary', primary);
+    document.documentElement.style.setProperty('--palette-secondary', secondary);
+    document.documentElement.style.setProperty('--palette-tertiary', tertiary);
+    document.documentElement.style.setProperty('--palette-white', white);
+    document.documentElement.style.setProperty('--palette-black', black);
 
   // Update background colors of elements
   document.getElementById('primary').style.backgroundColor = primary;
@@ -120,6 +132,56 @@ function generateColors() {
   checkTextColor();
 }
 
+// Function to save colors to Firestore
+async function savePalette() {
+  const primary = getComputedStyle(document.documentElement).getPropertyValue('--palette-primary');
+  const secondary = getComputedStyle(document.documentElement).getPropertyValue('--palette-secondary');
+  const tertiary = getComputedStyle(document.documentElement).getPropertyValue('--palette-tertiary');
+  const white = getComputedStyle(document.documentElement).getPropertyValue('--palette-white');
+  const black = getComputedStyle(document.documentElement).getPropertyValue('--palette-black');
+
+  // Get the current user's UID (assuming the user is logged in)
+  const user = getAuth().currentUser;
+  if (!user) {
+    console.log("No user is logged in.");
+    return;
+  }
+
+  // Prepare the palette data
+  const paletteData = {
+    primary,
+    secondary,
+    tertiary,
+    white,
+    black,
+    timestamp: new Date(), // Add timestamp for when the palette was saved
+  };
+
+  try {
+    // Reference to the user's 'toolkitmode' document
+    const toolkitModeRef = doc(db, "users", user.uid, "toolkitmode", "initialize"); // This is a document under the user
+
+    // Check if the 'toolkitmode' document exists; if not, create it
+    const docSnap = await getDoc(toolkitModeRef);
+    if (!docSnap.exists()) {
+      await setDoc(toolkitModeRef, {}); // Create 'toolkitmode' document if it doesn't exist
+      console.log("Created toolkitmode document for the user.");
+    }
+
+    // Now, get reference to the 'palettes' collection inside the 'toolkitmode' document
+    const palettesRef = collection(toolkitModeRef, "palettes");
+
+    // Add a new palette document with auto-generated ID
+    await addDoc(palettesRef, paletteData);
+
+    console.log("Palette saved successfully!");
+  } catch (error) {
+    console.error("Error saving palette: ", error);
+  }
+}
+
 // Make function globally accessible
 window.generateColors = generateColors;
+window.savePalette = savePalette;
 document.addEventListener('DOMContentLoaded', checkTextColor);
+document.addEventListener('DOMContentLoaded', generateColors);

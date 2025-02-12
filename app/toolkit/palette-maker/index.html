@@ -11,27 +11,27 @@
 </head>
 <body>
 
-    <a href="../" class="unseta"><h1><span class="material-symbols-outlined uiicon">arrow_back_ios</span>Your using<br><span>Palette Maker</span></h1></a>
+    <a href="../" class="unseta"><h1><span class="material-symbols-outlined uiicon">arrow_back_ios</span>Your using<br><span class="palettecolorp smooth">Palette Maker</span></h1></a>
 
     <div class="container">
-      <div id="primary" class="color">
+      <div id="primary" class="color smooth">
         <span class="material-symbols-outlined">lock_open</span>
         <p>Primary Color</p>
       </div>
-      <div id="secondary" class="color">
+      <div id="secondary" class="color smooth">
         <span class="material-symbols-outlined">lock_open</span>
         <p>Secondary Color</p>
       </div>
-      <div id="tertiary" class="color">
+      <div id="tertiary" class="color smooth">
         <span class="material-symbols-outlined">lock_open</span>
         <p>tertiary Color</p>
       </div>
       <div class="wb">
-        <div id="white" class="color">
+        <div id="white" class="color smooth">
           <span class="material-symbols-outlined">lock_open</span>
           <p>White Color</p>
         </div>
-        <div id="black" class="color">
+        <div id="black" class="color smooth">
           <span class="material-symbols-outlined">lock_open</span>
           <p>Black Color</p>
         </div>
@@ -39,10 +39,10 @@
     </div>
 
     <div class="bottombtn">
-      <div class="btn">
-        <p>Export <br>Color Palette</p>
+      <div class="btn" onclick="savePalette()">
+        <p>Save<br>Color Palette</p>
       </div>
-      <div class="btn primary" onclick="generateColors()">
+      <div class="btn primary palettecolorpb" onclick="generateColors()">
         <p>Generate <br>New Palette</p>
       </div>
     </div>

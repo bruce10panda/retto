@@ -48,6 +48,7 @@ body {
 
 .color span {
     color: var(--palette-white);
+    cursor: pointer;
 }
 
 .light {
